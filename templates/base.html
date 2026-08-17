@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}SOLE/AI — Pastel & Neon Sneaker Studio{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600;700;800&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Fredoka:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <!-- hCaptcha -->
+    <script src="https://js.hcaptcha.com/1/api.js?render=explicit&onload=hcaptchaReady" async defer></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    {% block head %}{% endblock %}
+
+    <script>
+        // Init theme early to avoid flicker
+        (function() {
+            const savedTheme = localStorage.getItem('soleai_theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+
+        // Redirect to home on page refresh (but not on first load or navigation)
+        (function () {
+            const nav = window.performance && window.performance.getEntriesByType('navigation')[0];
+            const isReload = nav ? nav.type === 'reload' : (window.performance && window.performance.navigation.type === 1);
+            if (isReload && window.location.pathname !== '/') {
+                window.location.replace('/');
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- Ambient Background Animated Orbs -->
+    <div class="ambient-bg" aria-hidden="true">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+        <div class="ambient-orb orb-3"></div>
+        <div class="ambient-grid"></div>
+    </div>
+
+    <!-- ── NAV ─────────────────────────────────────────────────────── -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="nav-logo">
+                <span class="logo-icon">👟</span>
+                <span class="logo-text">SOLE<span class="logo-slash">/</span>AI</span>
+            </a>
+            <ul class="nav-links">
+                <li>
+                    <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+                        <span class="link-text">Home</span>
+                        <span class="nav-pill"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('studio') }}" class="nav-link {% if request.endpoint == 'studio' %}active{% endif %}">
+                        <span class="link-text">Studio</span>
+                        <span class="nav-pill"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('history') }}" class="nav-link {% if request.endpoint == 'history' %}active{% endif %}">
+                        <span class="link-text">History</span>
+                        <span class="nav-pill"></span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <!-- Dark / Light Mode Toggle Button -->
+                <button id="themeToggle" class="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Light / Dark Mode">
+                    <span class="theme-icon sun-icon">☀️</span>
+                    <span class="theme-icon moon-icon">🌙</span>
+                    <span class="theme-toggle-slider"></span>
+                </button>
+
+                <a href="{{ url_for('studio') }}" class="nav-cta">
+                    <span>Design Now</span>
+                    <span class="cta-arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── PAGE CONTENT ─────────────────────────────────────────────── -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ── FOOTER ───────────────────────────────────────────────────── -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <span class="footer-logo">SOLE<span class="logo-slash">/</span>AI</span>
+                <p class="footer-tagline">AI-powered sneaker design platform. Pastel elegance in light, glowing neon in dark.</p>
+            </div>
+            <div class="footer-nav">
+                <div class="footer-col">
+                    <h4>Pathways</h4>
+                    <a href="{{ url_for('index') }}">Home Showcase</a>
+                    <a href="{{ url_for('studio') }}">Design Studio</a>
+                    <a href="{{ url_for('history') }}">Saved History</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Themes</h4>
+                    <span class="badge pastel-badge">Pastel Light</span>
+                    <span class="badge neon-badge">Glowing Dark</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 SOLE/AI Studio. Crafted for custom sneaker creators.</span>
+            <span class="status-indicator"><span class="status-dot"></span> Studio Engine Ready</span>
+        </div>
+    </footer>
+
+    <!-- Global Theme Switcher Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('themeToggle');
+            const htmlEl = document.documentElement;
+
+            toggleBtn?.addEventListener('click', () => {
+                const currentTheme = htmlEl.getAttribute('data-theme') || 'light';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                htmlEl.setAttribute('data-theme', newTheme);
+                localStorage.setItem('soleai_theme', newTheme);
+                
+                // Add click ripple animation to theme button
+                toggleBtn.classList.add('pulse-effect');
+                setTimeout(() => toggleBtn.classList.remove('pulse-effect'), 400);
+            });
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

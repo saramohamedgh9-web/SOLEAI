@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}SOLE/AI — Home | Next-Gen Sneaker Studio{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-container">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="sparkle">✨</span> AI-POWERED FOOTWEAR LAB
+            </div>
+            <h1 class="hero-title">
+                Craft Your <span class="gradient-text">Dream Kicks</span> In Seconds
+            </h1>
+            <p class="hero-subtitle">
+                Experience the ultimate fusion of soft pastel aesthetics and vibrant dark mode neon glows. 
+                Custom design, instant visualization, and AI generation at your fingertips.
+            </p>
+            <div class="hero-actions">
+                <a href="{{ url_for('studio') }}" class="btn btn-primary btn-hero">
+                    <span class="btn-text">Open Design Studio</span>
+                    <span class="btn-glow"></span>
+                </a>
+                <a href="{{ url_for('history') }}" class="btn btn-secondary btn-hero">
+                    <span class="btn-text">Explore History</span>
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">10k+</span>
+                    <span class="stat-label">Sneakers Generated</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Unique AI Concepts</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-number">⚡ Instant</span>
+                    <span class="stat-label">Color & Material Render</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="sneaker-card-hero floating-card">
+                <div class="hero-card-header">
+                    <span class="card-tag tag-pastel">Pastel Edition</span>
+                    <span class="card-tag tag-neon">Neon Glow</span>
+                </div>
+                
+                <!-- Real Sneaker Showcase Container -->
+                <div class="real-sneaker-showcase">
+                    <!-- Real Product Photography Image -->
+                    <img src="{{ url_for('static', filename='images/hero_pastel.jpg') }}" alt="Real Custom Sneaker Product Shot" class="real-shoe-img light-only-img" />
+                    <img src="{{ url_for('static', filename='images/hero_neon.jpg') }}" alt="Real Cyberpunk Neon Sneaker Product Shot" class="real-shoe-img dark-only-img" />
+                </div>
+
+                <div class="hero-card-footer">
+                    <div class="sneaker-info">
+                        <span class="sneaker-title">AIR PASTEL V1 PRO</span>
+                        <span class="sneaker-subtitle">Leather & Mesh Performance Silhouette</span>
+                    </div>
+                    <div class="palette-mini">
+                        <span class="dot dot-pink" title="Soft Pink"></span>
+                        <span class="dot dot-mint" title="Mint Green"></span>
+                        <span class="dot dot-lavender" title="Lavender"></span>
+                        <span class="dot dot-cyan" title="Sky Blue"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── THREE PATHWAYS SECTION ───────────────────────────────────── -->
+<section class="pathways-section">
+    <div class="section-header">
+        <h2 class="section-title">Explore The <span class="gradient-text">Pathways</span></h2>
+        <p class="section-desc">Seamless navigation designed for intuitive creativity and archival access.</p>
+    </div>
+
+    <div class="pathways-grid">
+        <div class="pathway-card card-home active-path">
+            <div class="pathway-icon">🏠</div>
+            <h3>Home Pathway</h3>
+            <p>Discover trendsetting colorways, feature showcases, and design inspirations curated for sneakerheads.</p>
+            <span class="pathway-status">You Are Here</span>
+        </div>
+
+        <a href="{{ url_for('studio') }}" class="pathway-card card-studio">
+            <div class="pathway-icon">🎨</div>
+            <h3>Studio Pathway</h3>
+            <p>Customize sneaker silhouettes, tweak pastel & neon palettes, select materials, and trigger AI rendering.</p>
+            <span class="pathway-action">Launch Studio →</span>
+        </a>
+
+        <a href="{{ url_for('history') }}" class="pathway-card card-history">
+            <div class="pathway-icon">📜</div>
+            <h3>History Pathway</h3>
+            <p>Review your session gallery of generated concepts, flip through past renders, and reload specs.</p>
+            <span class="pathway-action">View Gallery →</span>
+        </a>
+    </div>
+</section>
+
+<!-- ── FEATURES HIGHLIGHT ───────────────────────────────────────── -->
+<section class="features-section">
+    <div class="section-header">
+        <h2 class="section-title">Engineered For <span class="gradient-text">Visual Brilliance</span></h2>
+        <p class="section-desc">Built with state-of-the-art CSS animations and dual-mode theme technology.</p>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon-wrapper pastel-glow-icon">🌸</div>
+            <h4>Harmonious Pastels</h4>
+            <p>Soft pinks, mint greens, sky blues, and lavenders tuned for a playful, modern aesthetic in light mode.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-wrapper neon-glow-icon">⚡</div>
+            <h4>Glowing Dark Mode</h4>
+            <p>Deep charcoal backgrounds coupled with vibrant cyan, magenta, and teal neon ambient reflections.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-wrapper animated-icon">✨</div>
+            <h4>Fluid Micro-Interactions</h4>
+            <p>Smooth keyframe floaters, focus glows, ripple click effects, and 3D card perspective hover tilts.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-wrapper AI-icon">🤖</div>
+            <h4>AI Visual Generation</h4>
+            <p>Backend prompt compilation feeding high-resolution image rendering for endless footwear concepts.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── CTA BANNER ───────────────────────────────────────────────── -->
+<section class="cta-banner">
+    <div class="cta-banner-content">
+        <h2>Ready to Create Your Custom Pair?</h2>
+        <p>Step into the Studio and mix colors, materials, and vibes in real time.</p>
+        <a href="{{ url_for('studio') }}" class="btn btn-primary btn-large">
+            <span>Enter Design Studio Now</span>
+            <span class="btn-glow"></span>
+        </a>
+    </div>
+</section>
+{% endblock %}

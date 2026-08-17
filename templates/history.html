@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}SOLE/AI — History | Saved Sneaker Renders{% endblock %}
+
+{% block content %}
+<div class="history-container">
+    <!-- History Header -->
+    <div class="history-header">
+        <div class="history-title-group">
+            <span class="badge history-badge">HISTORY PATHWAY</span>
+            <h1 class="history-title">Saved <span class="gradient-text">Renders</span></h1>
+            <p class="history-subtitle">Review past sneaker concepts generated during your active session.</p>
+        </div>
+
+        {% if designs and designs|length > 0 %}
+        <form action="{{ url_for('clear_history') }}" method="POST" class="clear-history-form">
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Clear all saved session history?');">
+                🗑️ Clear History
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- History Cards Grid -->
+    {% if designs and designs|length > 0 %}
+    <div class="history-grid">
+        {% for design in designs %}
+        <div class="history-card card-glass flip-in" style="animation-delay: {{ loop.index0 * 0.08 }}s;">
+            <!-- Card Header / Image Box -->
+            <div class="history-img-box">
+                {% if design.image_url %}
+                <img src="{{ design.image_url }}" alt="{{ design.concept.name }}" class="history-img" loading="lazy" />
+                {% else %}
+                <div class="history-img-placeholder">
+                    <svg viewBox="0 0 600 360" class="history-svg-placeholder" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="300" cy="310" rx="220" ry="16" fill="var(--shadow-color)" opacity="0.3"/>
+                        <path d="M 80 280 C 110 300, 450 300, 490 280 L 100 250 Z" fill="#2d2b38" />
+                        <path d="M 75 265 C 100 285, 460 285, 495 265 L 90 235 Z" fill="var(--bg-card)" stroke="var(--border-color)" stroke-width="2"/>
+                        <path d="M 430 235 C 470 235, 505 210, 475 185 L 400 235 Z" fill="{{ design.prefs.primary_color if design.prefs and design.prefs.primary_color else 'var(--pastel-peach)' }}" opacity="0.8"/>
+                        <path d="M 110 235 C 120 180, 160 110, 240 90 C 300 75, 340 120, 390 150 C 440 175, 475 190, 480 220 Z" fill="{{ design.prefs.primary_color if design.prefs and design.prefs.primary_color else 'var(--accent-primary)' }}"/>
+                        <path d="M 125 185 C 140 120, 210 85, 250 110 C 230 150, 180 200, 125 185 Z" fill="{{ design.prefs.accent_color if design.prefs and design.prefs.accent_color else 'var(--accent-secondary)' }}"/>
+                        <path d="M 160 215 C 240 185, 330 140, 440 180 Z" fill="var(--text-primary)" />
+                    </svg>
+                    <span class="placeholder-label">Concept Specs Saved</span>
+                </div>
+                {% endif %}
+                <span class="history-timestamp">{{ design.timestamp }}</span>
+            </div>
+
+            <!-- Card Body -->
+            <div class="history-card-body">
+                <h3 class="history-card-title">{{ design.concept.name if design.concept and design.concept.name else 'Custom Sneaker' }}</h3>
+                <p class="history-card-tagline">{{ design.concept.tagline if design.concept and design.concept.tagline else 'AI Footwear Design' }}</p>
+
+                <!-- Prefs Tags -->
+                {% if design.prefs %}
+                <div class="history-tags">
+                    <span class="chip-tag">{{ design.prefs.style }}</span>
+                    <span class="chip-tag">{{ design.prefs.material }}</span>
+                    <span class="chip-tag">{{ design.prefs.occasion }}</span>
+                </div>
+
+                <!-- Palette Swatches -->
+                <div class="history-swatches">
+                    <span class="swatch-label">Colors:</span>
+                    <div class="swatch-dots">
+                        <span class="swatch-dot" style="background-color: {{ design.prefs.primary_color }};" title="Primary: {{ design.prefs.primary_color }}"></span>
+                        <span class="swatch-dot" style="background-color: {{ design.prefs.accent_color }};" title="Accent: {{ design.prefs.accent_color }}"></span>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Card Footer Actions -->
+                <div class="history-card-footer">
+                    <a href="{{ url_for('studio') }}" class="btn btn-secondary btn-block btn-sm">
+                        <span>Re-edit in Studio</span>
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="history-empty card-glass">
+        <div class="empty-icon-large">📜</div>
+        <h2>No History Renders Yet</h2>
+        <p>You haven't generated any sneaker designs in this session yet. Head over to the Studio to launch your first concept!</p>
+        <a href="{{ url_for('studio') }}" class="btn btn-primary btn-large">
+            <span>Launch Studio</span>
+            <span class="btn-glow"></span>
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

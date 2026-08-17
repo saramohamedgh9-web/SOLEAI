@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}SOLE/AI — Studio | Custom Sneaker Creator{% endblock %}
+
+{% block content %}
+<div class="studio-container">
+    <!-- Studio Header -->
+    <div class="studio-header">
+        <div class="studio-title-group">
+            <span class="badge studio-badge">STUDIO PATHWAY</span>
+            <h1 class="studio-title">Design <span class="gradient-text">Studio</span></h1>
+            <p class="studio-subtitle">Customize parameters, mix pastel or neon palettes, and watch AI build your concept.</p>
+        </div>
+        <!-- AI Stage Pipeline Indicators -->
+        <div class="pipeline-tracker">
+            <div id="stageGroq" class="stage-pill stage-pill--active">
+                <span class="pill-dot"></span>
+                <span class="pill-label">1. Concept & Specs</span>
+            </div>
+            <div class="stage-connector"></div>
+            <div id="stageHF" class="stage-pill">
+                <span class="pill-dot"></span>
+                <span class="pill-label">2. AI Visual Render</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Studio Layout: 2 Columns -->
+    <div class="studio-grid">
+        <!-- LEFT COLUMN: Controls & Specification Form -->
+        <div class="form-panel card-glass">
+            <h2 class="panel-heading">
+                <span class="heading-icon">🎛️</span> Sneaker Specifications
+            </h2>
+
+            <form id="sneakerForm" onsubmit="return false;" class="studio-form">
+                <!-- 1. Silhouette Style -->
+                <div class="form-group">
+                    <label class="form-label">Sneaker Silhouette</label>
+                    <div class="chip-group" data-field="style">
+                        <button type="button" class="chip active" data-value="High-Top Retro">High-Top Retro</button>
+                        <button type="button" class="chip" data-value="Low Runner">Low Runner</button>
+                        <button type="button" class="chip" data-value="Chunky Dad Shoe">Chunky Dad</button>
+                        <button type="button" class="chip" data-value="Cyber Slip-On">Cyber Slip-On</button>
+                        <button type="button" class="chip" data-value="Futuristic High">Futuristic High</button>
+                    </div>
+                    <input type="hidden" id="style" value="High-Top Retro" />
+                </div>
+
+                <!-- 2. Material Selection -->
+                <div class="form-group">
+                    <label class="form-label">Upper Material</label>
+                    <div class="chip-group" data-field="material">
+                        <button type="button" class="chip active" data-value="Premium Leather">Leather</button>
+                        <button type="button" class="chip" data-value="Velvet Suede">Velvet Suede</button>
+                        <button type="button" class="chip" data-value="Breathable Mesh">Breathable Mesh</button>
+                        <button type="button" class="chip" data-value="Metallic Synthetic">Metallic</button>
+                        <button type="button" class="chip" data-value="Recycled Canvas">Eco Canvas</button>
+                    </div>
+                    <input type="hidden" id="material" value="Premium Leather" />
+                </div>
+
+                <!-- 3. Occasion / Vibe -->
+                <div class="form-group">
+                    <label class="form-label">Aesthetic Vibe</label>
+                    <div class="chip-group" data-field="occasion">
+                        <button type="button" class="chip active" data-value="Streetwear">Streetwear</button>
+                        <button type="button" class="chip" data-value="Pastel Dream">Pastel Dream</button>
+                        <button type="button" class="chip" data-value="Cyberpunk Neon">Cyberpunk</button>
+                        <button type="button" class="chip" data-value="Minimalist">Minimalist</button>
+                    </div>
+                    <input type="hidden" id="occasion" value="Streetwear" />
+                </div>
+
+                <!-- 4. Color Pickers & Presets -->
+                <div class="form-group colors-group">
+                    <label class="form-label">Color Palette Selection</label>
+
+                    <!-- Quick Preset Swatches -->
+                    <div class="color-presets">
+                        <span class="preset-label">Pastel & Neon Presets:</span>
+                        <div class="preset-swatches">
+                            <button type="button" class="preset-btn" data-primary="#ffb7c5" data-accent="#a29bfe" title="Pink & Lavender" style="background: linear-gradient(135deg, #ffb7c5, #a29bfe);"></button>
+                            <button type="button" class="preset-btn" data-primary="#b8e994" data-accent="#74b9ff" title="Mint & Sky Blue" style="background: linear-gradient(135deg, #b8e994, #74b9ff);"></button>
+                            <button type="button" class="preset-btn" data-primary="#ffeaa7" data-accent="#ff7675" title="Peach & Coral" style="background: linear-gradient(135deg, #ffeaa7, #ff7675);"></button>
+                            <button type="button" class="preset-btn" data-primary="#00f2fe" data-accent="#4facfe" title="Cyber Cyan & Blue" style="background: linear-gradient(135deg, #00f2fe, #4facfe);"></button>
+                            <button type="button" class="preset-btn" data-primary="#b537f2" data-accent="#00ff9d" title="Neon Violet & Mint" style="background: linear-gradient(135deg, #b537f2, #00ff9d);"></button>
+                        </div>
+                    </div>
+
+                    <div class="color-pickers-row">
+                        <!-- Primary Color -->
+                        <div class="color-field">
+                            <span class="color-field-label">Primary Upper Color</span>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="primary_color" value="#ffb7c5" class="color-picker-input" />
+                                <input type="text" id="primary_color_text" value="#ffb7c5" class="input-text color-hex-text" maxlength="7" />
+                            </div>
+                        </div>
+
+                        <!-- Accent Color -->
+                        <div class="color-field">
+                            <span class="color-field-label">Accent / Trim Color</span>
+                            <div class="color-input-wrapper">
+                                <input type="color" id="accent_color" value="#a29bfe" class="color-picker-input" />
+                                <input type="text" id="accent_color_text" value="#a29bfe" class="input-text color-hex-text" maxlength="7" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Creative Inspiration Prompt -->
+                <div class="form-group">
+                    <label for="inspiration" class="form-label">Creative Inspiration / Theme Prompt (Optional)</label>
+                    <input type="text" id="inspiration" class="input-text" placeholder="e.g. Cherry Blossom, Retro 90s Arcade, Holographic Cloud..." />
+                </div>
+
+                <!-- Error Box -->
+                <div id="formError" class="form-error-msg"></div>
+
+                <!-- Generate CTA Button -->
+                <button type="button" id="generateBtn" class="btn btn-primary btn-block btn-generate">
+                    <span class="btn-icon">⚡</span>
+                    <span class="btn-text">Generate Sneaker Concept</span>
+                    <span class="btn-glow"></span>
+                </button>
+            </form>
+        </div>
+
+        <!-- RIGHT COLUMN: Interactive Visualizer & Preview Display -->
+        <div class="preview-panel card-glass">
+            <!-- STATE 1: Empty Initial Preview State -->
+            <div id="emptyState" class="preview-state empty-state">
+                <div class="empty-vector-wrapper">
+                    <!-- Real Product Photography Image -->
+                    <img src="{{ url_for('static', filename='images/hero_pastel.jpg') }}" alt="Real Custom Sneaker Product Shot" class="studio-real-photo-img light-only-img" />
+                    <img src="{{ url_for('static', filename='images/hero_neon.jpg') }}" alt="Real Cyberpunk Neon Sneaker Product Shot" class="studio-real-photo-img dark-only-img" />
+                </div>
+                <div class="empty-info">
+                    <h3>Interactive Visualizer Ready</h3>
+                    <p>Select your specs and hit <strong>Generate Sneaker Concept</strong> to render your custom pair.</p>
+                </div>
+            </div>
+
+            <!-- STATE 2: Loading State -->
+            <div id="loadingState" class="preview-state loading-state hidden">
+                <div class="scanning-loader-container">
+                    <div class="scanning-laser"></div>
+                    <div class="loader-sneaker-pulse">👟</div>
+                    <div class="loading-spinner-ring"></div>
+                </div>
+                <h3 class="loading-title">Generating AI Sneaker Concept...</h3>
+                <p class="loading-subtext">Synthesizing color palette, upper materials, and high-res photography prompt.</p>
+                <div class="skeleton-lines">
+                    <div class="skeleton-line line-1"></div>
+                    <div class="skeleton-line line-2"></div>
+                </div>
+            </div>
+
+            <!-- STATE 3: Generated Result -->
+            <div id="result" class="preview-state result-state hidden">
+                <div class="result-card">
+                    <!-- Image Display Container -->
+                    <div class="result-image-box">
+                        <!-- Image Loading Spinner -->
+                        <div id="imgLoading" class="img-spinner-overlay">
+                            <div class="spinner-orb"></div>
+                            <span>Rendering 8k Photography...</span>
+                        </div>
+
+                        <!-- Main AI Generated Image -->
+                        <div id="imgFrame" class="img-frame hidden">
+                            <img id="aiImage" src="" alt="AI Generated Sneaker Concept" class="result-img" />
+                            <div class="img-badge">AI FLUX Render</div>
+                        </div>
+
+                        <!-- Image Error Fallback -->
+                        <div id="imgError" class="img-error-box hidden">
+                            <span class="error-icon">⚠️</span>
+                            <span id="imgErrorText">Image generation unavailable.</span>
+                        </div>
+                    </div>
+
+                    <!-- Concept Metadata -->
+                    <div class="result-details">
+                        <div class="result-header-row">
+                            <h2 id="resultName" class="result-name">Sneaker Concept</h2>
+                            <span id="resultPrice" class="result-price-tag">$150</span>
+                        </div>
+                        <p id="resultTagline" class="result-tagline">Custom AI Design</p>
+
+                        <div class="result-meta-pills">
+                            <span class="meta-pill"><strong id="resultAudience">Concept Phase</strong></span>
+                            <span class="meta-pill">8k Resolution</span>
+                            <span class="meta-pill">Unique Studio ID</span>
+                        </div>
+
+                        <p id="resultDesc" class="result-desc">Design generation complete.</p>
+
+                        <!-- Action Buttons -->
+                        <div class="result-actions">
+                            <button id="regenImgBtn" type="button" class="btn btn-secondary btn-sm hidden">
+                                🔄 Re-render Image
+                            </button>
+                            <button id="regenBtn" type="button" class="btn btn-outline btn-sm">
+                                ✏️ Start New Design
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='JS/studio.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const primaryInput = document.getElementById('primary_color');
+        const accentInput = document.getElementById('accent_color');
+
+        // Preset button quick click handlers
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const p = btn.dataset.primary;
+                const a = btn.dataset.accent;
+                if (p && primaryInput) {
+                    primaryInput.value = p;
+                    document.getElementById('primary_color_text').value = p;
+                }
+                if (a && accentInput) {
+                    accentInput.value = a;
+                    document.getElementById('accent_color_text').value = a;
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
